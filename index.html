@@ -14,6 +14,7 @@
             background-color: #ffffff;
             color: #050505;
             overflow-x: hidden;
+            transition: background-color 0.5s ease;
         }
 
         .gradient-text {
@@ -29,7 +30,6 @@
             color: #050505;
         }
 
-        /* 캔버스를 특정 영역 안에 고정 */
         canvas#bits-bg {
             position: absolute;
             top: 0;
@@ -38,7 +38,7 @@
             height: 100%;
             z-index: 0;
             opacity: 0.6; 
-            pointer-events: none; /* 클릭 방해 금지 */
+            pointer-events: none;
         }
 
         .glass-card {
@@ -46,15 +46,95 @@
             backdrop-filter: blur(20px);
             border: 1px solid rgba(0, 0, 0, 0.08);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.03);
+            transition: all 0.3s ease;
+        }
+
+        .motto-card:hover, .member-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.06);
+            border-color: rgba(0, 0, 0, 0.2);
         }
 
         .hero-content {
             position: relative;
             z-index: 10;
+            width: 100%;
         }
 
         .coming-soon-glow {
             text-shadow: 0 0 30px rgba(0, 0, 0, 0.05);
+        }
+
+        /* SPA Transition Classes */
+        .page-view {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .page-view.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .nav-active {
+            font-weight: 700;
+            border-bottom: 2px solid black;
+        }
+
+        /* Hashtag Styling */
+        .hashtag {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            color: white;
+            display: inline-block;
+            margin-bottom: 0.25rem;
+        }
+
+        .tag-python {
+            background: linear-gradient(135deg, #3776ab 0%, #3776ab 50%, #ffd43b 50%, #ffd43b 100%);
+            text-shadow: 0px 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .tag-frontend {
+            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .tag-arduino {
+            background-color: #00979d;
+        }
+
+        .tag-ev3 {
+            background-color: #7d7d7d;
+        }
+        
+        .tag-default {
+            background-color: #e5e7eb;
+            color: #6b7280;
+        }
+
+        /* Profile Image Styling */
+        .profile-img-container {
+            width: 6rem;
+            height: 6rem;
+            border-radius: 9999px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 2rem;
+            overflow: hidden;
+            background-color: #f3f4f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .profile-img-container img {
+            width: 100%;
+            height: 100%;
+            object-cover: cover;
         }
     </style>
 </head>
@@ -62,53 +142,171 @@
 
     <!-- Navigation -->
     <nav class="fixed w-full z-50 px-6 py-4 flex justify-between items-center border-b border-black/5 bg-white/80 backdrop-blur-md">
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-2 cursor-pointer" onclick="showPage('home')">
             <span class="viii-symbol">[VIII]</span>
             <span class="text-xl font-bold tracking-tighter">BYTE</span>
         </div>
-        <div class="hidden md:block">
-            <span class="text-[10px] text-gray-400 font-mono uppercase tracking-[0.3em]">Convergence Coding Crew</span>
+        
+        <div class="flex gap-8 items-center">
+            <button onclick="showPage('home')" id="nav-home" class="nav-link text-sm uppercase tracking-widest nav-active">Home</button>
+            <button onclick="showPage('crew')" id="nav-crew" class="nav-link text-sm uppercase tracking-widest">Crew</button>
+            <div class="hidden md:block ml-4 pl-8 border-l border-black/10">
+                <span class="text-[10px] text-gray-400 font-mono uppercase tracking-[0.3em]">Convergence Coding Crew</span>
+            </div>
         </div>
     </nav>
 
-    <!-- Hero Section (애니메이션이 이 안에서만 작동합니다) -->
-    <header id="hero-area" class="relative h-screen flex flex-col justify-center items-center text-center px-4 overflow-hidden">
-        <!-- 캔버스를 헤더 안으로 이동 -->
-        <canvas id="bits-bg"></canvas>
-        
-        <div class="hero-content">
-            <div class="mb-6 inline-block px-4 py-1.5 border border-black/10 rounded-full text-[11px] font-medium tracking-widest text-gray-500 uppercase">
-                Coding Crew for Convergence
+    <!-- HOME PAGE VIEW -->
+    <main id="home-view" class="page-view active">
+        <!-- Hero Section -->
+        <header id="hero-area" class="relative h-screen flex flex-col justify-center items-center text-center px-4 overflow-hidden">
+            <canvas id="bits-bg"></canvas>
+            
+            <div class="hero-content flex flex-col items-center">
+                <div class="mb-6 inline-block px-4 py-1.5 border border-black/10 rounded-full text-[11px] font-medium tracking-widest text-gray-500 uppercase">
+                    Coding Crew for Convergence
+                </div>
+                <h1 class="text-6xl md:text-9xl font-bold mb-8 tracking-tighter leading-none">
+                    8 Bits to <span class="gradient-text">1 BYTE</span>
+                </h1>
+                <p class="text-gray-400 max-w-2xl mx-auto text-lg md:text-xl leading-relaxed font-light">
+                    8개의 비트가 모여 하나의 바이트를 이루듯,<br>
+                    함께 성장하며 새로운 가능성을 만들어갑니다.
+                </p>
+                <div class="mt-20 flex flex-col items-center">
+                    <div class="w-px h-16 bg-gradient-to-b from-black/20 to-transparent"></div>
+                </div>
             </div>
-            <h1 class="text-6xl md:text-9xl font-bold mb-8 tracking-tighter leading-none">
-                8 Bits to <span class="gradient-text">1 BYTE</span>
-            </h1>
-            <p class="text-gray-400 max-w-2xl text-lg md:text-xl leading-relaxed font-light">
-                8개의 비트가 모여 하나의 바이트를 이루듯,<br>
-                함께 성장하며 새로운 가능성을 만들어갑니다.
-            </p>
-            <div class="mt-20 flex flex-col items-center">
-                <div class="w-px h-16 bg-gradient-to-b from-black/20 to-transparent"></div>
-            </div>
-        </div>
-    </header>
+        </header>
 
-    <!-- Coming Soon Section -->
-    <section class="relative py-32 px-6 flex flex-col items-center justify-center text-center bg-white">
-        <div class="glass-card p-12 md:p-24 rounded-[3rem] max-w-5xl w-full relative z-10">
-            <h2 class="text-5xl md:text-7xl font-bold mb-8 coming-soon-glow tracking-tight">
-                Coming Soon<span class="text-gray-300">...</span>
-            </h2>
-            <p class="text-gray-400 text-lg md:text-xl mb-12 font-light">
-                더 넓은 세상으로 나아가기 위한 융합의 장을 준비하고 있습니다.
-            </p>
-            <div class="flex justify-center gap-6">
-                <div class="w-2 h-2 rounded-full bg-black/80 animate-bounce" style="animation-delay: 0s"></div>
-                <div class="w-2 h-2 rounded-full bg-black/80 animate-bounce" style="animation-delay: 0.2s"></div>
-                <div class="w-2 h-2 rounded-full bg-black/80 animate-bounce" style="animation-delay: 0.4s"></div>
+        <!-- Motto Section -->
+        <section class="py-32 px-6 bg-[#fafafa]">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-20">
+                    <h2 class="text-3xl md:text-5xl font-bold tracking-tight mb-4 text-black/90">Our Motto</h2>
+                    <div class="w-12 h-1 bg-black mx-auto opacity-20"></div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Motto 1 -->
+                    <div class="glass-card motto-card p-10 rounded-[2rem] flex flex-col items-start text-left bg-white">
+                        <div class="w-14 h-14 bg-black text-white rounded-2xl flex items-center justify-center mb-8">
+                            <i data-lucide="users" class="w-7 h-7"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4">모두의 기회의 장</h3>
+                        <p class="text-gray-500 leading-relaxed font-light">
+                            모든 개발자들의 커뮤니티 역할을 수행하며, 누구나 팀을 구하거나 원하는 프로젝트에 자유롭게 참가할 수 있는 환경을 제공합니다.
+                        </p>
+                    </div>
+
+                    <!-- Motto 2 -->
+                    <div class="glass-card motto-card p-10 rounded-[2rem] flex flex-col items-start text-left bg-white">
+                        <div class="w-14 h-14 bg-black text-white rounded-2xl flex items-center justify-center mb-8">
+                            <i data-lucide="atom" class="w-7 h-7"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4">융합적인 과학의 세계</h3>
+                        <p class="text-gray-500 leading-relaxed font-light">
+                            정보 분야에만 국한되지 않습니다. 환경, 예술 등 서로 다른 학문과 기술의 경계를 허물고 도메인 간의 융합을 통해 새로운 솔루션을 창조합니다.
+                        </p>
+                    </div>
+
+                    <!-- Motto 3 -->
+                    <div class="glass-card motto-card p-10 rounded-[2rem] flex flex-col items-start text-left bg-white">
+                        <div class="w-14 h-14 bg-black text-white rounded-2xl flex items-center justify-center mb-8">
+                            <i data-lucide="zap" class="w-7 h-7"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4">일상 속 불편함 해결</h3>
+                        <p class="text-gray-500 leading-relaxed font-light">
+                            거창한 이론보다 실질적인 변화를 지향합니다. 우리 주변의 작은 불편함들을 코드로 해결하며 세상을 조금씩 바꿔나갑니다.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Coming Soon Section -->
+        <section class="relative py-32 px-6 flex flex-col items-center justify-center text-center bg-white">
+            <div class="glass-card p-12 md:p-24 rounded-[3rem] max-w-5xl w-full relative z-10 bg-[#fdfdfd]">
+                <h2 class="text-5xl md:text-7xl font-bold mb-8 coming-soon-glow tracking-tight">
+                    Coming Soon<span class="text-gray-300">...</span>
+                </h2>
+                <p class="text-gray-400 text-lg md:text-xl mb-12 font-light">
+                    더 넓은 세상으로 나아가기 위한 융합의 장을 준비하고 있습니다.
+                </p>
+                <div class="flex justify-center gap-6">
+                    <div class="w-2 h-2 rounded-full bg-black/80 animate-bounce" style="animation-delay: 0s"></div>
+                    <div class="w-2 h-2 rounded-full bg-black/80 animate-bounce" style="animation-delay: 0.2s"></div>
+                    <div class="w-2 h-2 rounded-full bg-black/80 animate-bounce" style="animation-delay: 0.4s"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- CREW PAGE VIEW -->
+    <main id="crew-view" class="page-view py-32 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-24">
+                <span class="text-[#050505] font-bold tracking-[0.5em] text-xs uppercase mb-4 block">Meet the bits</span>
+                <h2 class="text-5xl md:text-7xl font-bold tracking-tighter mb-6">Our Crew</h2>
+                <p class="text-gray-400 max-w-xl mx-auto font-light">
+                    8개의 비트가 모여 만드는 하나의 시너지.<br>우리는 코드로 새로운 가치를 증명합니다.
+                </p>
+            </div>
+
+            <div id="crew-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Member 1: HENRY KIM -->
+                <div class="glass-card member-card p-10 rounded-[2.5rem] text-center border-black/10">
+                    <div class="profile-img-container">
+                        <!-- 여기에 사진 주소를 넣으세요! -->
+                        <img src="/khrprofile.png" alt="Henry Kim" onerror="this.src='https://api.dicebear.com/7.x/avataaars/svg?seed=Henry'; this.onerror=null;">
+                    </div>
+                    <h4 class="text-2xl font-bold mb-6 uppercase tracking-tight">Henry Kim</h4>
+                    <div class="flex flex-wrap justify-center gap-2 mb-8">
+                        <span class="hashtag tag-python">#Python</span>
+                        <span class="hashtag tag-frontend">#Frontend</span>
+                        <span class="hashtag tag-arduino">#Arduino</span>
+                        <span class="hashtag tag-ev3">#EV3</span>
+                    </div>
+                    <div class="flex justify-center gap-4 pt-4 border-t border-black/5">
+                        <a href="https://www.instagram.com/_no.lxi/" target="_blank" rel="noopener noreferrer">
+                            <i data-lucide="instagram" class="w-5 h-5 text-gray-400 cursor-pointer hover:text-black transition-colors"></i>
+                        </a>
+                        <a href="https://solved.ac/profile/henry0611" target="_blank" rel="noopener noreferrer">
+                            <i data-lucide="code-2" class="w-5 h-5 text-gray-400 cursor-pointer hover:text-black transition-colors"></i>
+                        </a>
+                        <i data-lucide="github" class="w-5 h-5 text-gray-400 cursor-pointer hover:text-black transition-colors"></i>
+                        <i data-lucide="mail" class="w-5 h-5 text-gray-400 cursor-pointer hover:text-black transition-colors"></i>
+                    </div>
+                </div>
+
+                <!-- Member 2: JUNSIK KIM -->
+                <div class="glass-card member-card p-10 rounded-[2.5rem] text-center border-black/5">
+                    <div class="profile-img-container">
+                        <!-- 여기에 사진 주소를 넣으세요! -->
+                        <img src="YOUR_PHOTO_URL_HERE" alt="Junsik Kim" onerror="this.src='https://api.dicebear.com/7.x/avataaars/svg?seed=Junsik'; this.onerror=null;">
+                    </div>
+                    <h4 class="text-2xl font-bold mb-6 uppercase tracking-tight">Junsik Kim</h4>
+                    <div class="flex flex-wrap justify-center gap-2 mb-8">
+                        <span class="hashtag tag-python">#Python</span>
+                        <span class="hashtag tag-arduino">#Arduino</span>
+                    </div>
+                    <div class="flex justify-center gap-4 pt-4 border-t border-black/5">
+                        <i data-lucide="github" class="w-5 h-5 text-gray-400 cursor-pointer hover:text-black transition-colors"></i>
+                        <i data-lucide="cpu" class="w-5 h-5 text-gray-400 cursor-pointer hover:text-black transition-colors"></i>
+                    </div>
+                </div>
+
+                <!-- Who's Next Card -->
+                <div class="glass-card member-card p-10 rounded-[2.5rem] text-center border-dashed border-gray-300 bg-gray-50/30 flex flex-col justify-center items-center">
+                    <div class="w-20 h-20 rounded-full border-2 border-dashed border-gray-300 flex items-center justify-center text-gray-300 mb-6">
+                        <i data-lucide="plus" class="w-8 h-8"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-gray-400 italic">Who's next..</h4>
+                    <p class="text-gray-400 text-xs mt-4 uppercase tracking-widest">Wait for Bit #3/8</p>
+                </div>
             </div>
         </div>
-    </section>
+    </main>
 
     <!-- Footer -->
     <footer class="py-16 px-6 text-center border-t border-black/5">
@@ -123,6 +321,27 @@
         // Initialize Lucide Icons
         lucide.createIcons();
 
+        // SPA Navigation Logic
+        function showPage(pageId) {
+            document.querySelectorAll('.page-view').forEach(view => {
+                view.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('nav-active');
+            });
+
+            const activePage = document.getElementById(`${pageId}-view`);
+            activePage.classList.add('active');
+            
+            document.getElementById(`nav-${pageId}`).classList.add('nav-active');
+            window.scrollTo(0, 0);
+
+            if(pageId === 'home') {
+                resize();
+            }
+        }
+
         // Canvas Background Animation
         const canvas = document.getElementById('bits-bg');
         const heroArea = document.getElementById('hero-area');
@@ -131,7 +350,7 @@
         const particles = [];
 
         function resize() {
-            // 브라우저 전체가 아닌 히어로 섹션의 크기를 가져옴
+            if (!heroArea) return;
             width = canvas.width = heroArea.offsetWidth;
             height = canvas.height = heroArea.offsetHeight;
         }
@@ -144,8 +363,8 @@
                 this.reset();
             }
             reset() {
-                this.x = Math.random() * width;
-                this.y = height + Math.random() * 50; 
+                this.x = Math.random() * (width || window.innerWidth);
+                this.y = (height || window.innerHeight) + Math.random() * 50; 
                 this.size = Math.random() * 1.2 + 0.8;
                 this.speed = Math.random() * 1.0 + 0.2; 
                 this.text = Math.random() > 0.5 ? '1' : '0';
@@ -163,19 +382,19 @@
             }
         }
 
-        // 영역이 좁아졌으므로 입자 밀도를 적절히 조절
         for (let i = 0; i < 70; i++) particles.push(new Particle());
 
         function animate() {
-            ctx.clearRect(0, 0, width, height);
-            particles.forEach(p => {
-                p.update();
-                p.draw();
-            });
+            if (document.getElementById('home-view').classList.contains('active')) {
+                ctx.clearRect(0, 0, width, height);
+                particles.forEach(p => {
+                    p.update();
+                    p.draw();
+                });
+            }
             requestAnimationFrame(animate);
         }
         
-        // 초기화 후 애니메이션 시작
         animate();
     </script>
 </body>
