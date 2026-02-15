@@ -28,13 +28,6 @@
             letter-spacing: 0.2em;
             font-weight: 700;
             color: #050505;
-            transition: all 0.3s ease;
-        }
-
-        /* 로고 호버 애니메이션 */
-        .logo-container:hover .viii-symbol {
-            letter-spacing: 0.4em;
-            color: #4facfe;
         }
 
         canvas#bits-bg {
@@ -84,7 +77,7 @@
             opacity: 1;
         }
 
-        /* 네비게이션바 애니메이션 스타일 */
+        /* 네비게이션바 스타일 */
         nav {
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -163,7 +156,7 @@
 
     <!-- Navigation -->
     <nav id="main-nav" class="fixed w-full z-50 px-6 py-4 flex justify-between items-center border-b border-black/5 bg-white/40 backdrop-blur-md">
-        <div class="logo-container flex items-center gap-2 cursor-pointer transition-all duration-300" onclick="showPage('home')">
+        <div class="logo-container flex items-center gap-2 cursor-pointer" onclick="showPage('home')">
             <span class="viii-symbol">[VIII]</span>
             <span class="text-xl font-bold tracking-tighter">BYTE</span>
         </div>
@@ -179,7 +172,6 @@
 
     <!-- HOME PAGE VIEW -->
     <main id="home-view" class="page-view active">
-        <!-- Hero Section -->
         <header id="hero-area" class="relative h-screen flex flex-col justify-center items-center text-center px-4 overflow-hidden">
             <canvas id="bits-bg"></canvas>
             
@@ -200,7 +192,6 @@
             </div>
         </header>
 
-        <!-- Motto Section -->
         <section class="py-32 px-6 bg-[#fafafa]">
             <div class="max-w-7xl mx-auto text-center">
                 <div class="mb-20">
@@ -325,63 +316,50 @@
     </main>
 
     <!-- Footer -->
-    <footer class="py-16 px-6 text-center border-t border-black/5">
-        <div class="flex flex-col items-center gap-4">
+    <footer class="py-16 px-6 text-center border-t border-black/5 bg-[#fafafa]">
+        <div class="max-w-7xl mx-auto flex flex-col items-center gap-6">
+            <div class="flex items-center gap-6">
+                <a href="https://github.com" target="_blank" class="text-gray-400 hover:text-black transition-colors"><i data-lucide="github" class="w-5 h-5"></i></a>
+                <a href="https://discord.com" target="_blank" class="text-gray-400 hover:text-black transition-colors"><i data-lucide="message-circle" class="w-5 h-5"></i></a>
+                <a href="https://instagram.com" target="_blank" class="text-gray-400 hover:text-black transition-colors"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+            </div>
             <div class="flex items-center gap-2 mb-2 group">
                 <i data-lucide="mail" class="w-4 h-4 text-gray-400 group-hover:text-black transition-colors"></i>
-                <!-- 클릭 시 웹 Gmail이 바로 열리도록 수정됨 -->
                 <a href="https://mail.google.com/mail/?view=cm&fs=1&to=wearebyte08@gmail.com" target="_blank" rel="noopener noreferrer" class="text-sm font-medium text-gray-500 hover:text-black transition-colors">
                     wearebyte08@gmail.com
                 </a>
             </div>
-            <div class="text-[10px] text-gray-400 uppercase tracking-widest">
-                &copy; 2024 BYTE Coding Crew. [VIII] | Powered by Convergence
+            <div class="text-[10px] text-gray-400 uppercase tracking-widest leading-loose">
+                &copy; 2024 BYTE Coding Crew. [VIII] | Powered by Convergence<br>
+                Built with Passion in South Korea
             </div>
         </div>
     </footer>
 
     <script>
-        // Initialize Lucide Icons
         lucide.createIcons();
 
-        // SPA Navigation Logic
         function showPage(pageId) {
             document.querySelectorAll('.page-view').forEach(view => {
                 view.classList.remove('active');
             });
-            
             document.querySelectorAll('.nav-link').forEach(link => {
                 link.classList.remove('nav-active');
             });
-
             const activePage = document.getElementById(`${pageId}-view`);
-            if (activePage) {
-                activePage.classList.add('active');
-            }
-            
+            if (activePage) activePage.classList.add('active');
             const navBtn = document.getElementById(`nav-${pageId}`);
-            if (navBtn) {
-                navBtn.classList.add('nav-active');
-            }
-            
+            if (navBtn) navBtn.classList.add('nav-active');
             window.scrollTo(0, 0);
-
-            if(pageId === 'home') {
-                resize();
-            }
+            if(pageId === 'home') resize();
         }
 
-        // 스크롤 감지 네비게이션 애니메이션
         const nav = document.getElementById('main-nav');
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                nav.classList.add('scrolled');
-            } else {
-                nav.classList.remove('scrolled');
-            }
+            if (window.scrollY > 50) nav.classList.add('scrolled');
+            else nav.classList.remove('scrolled');
         });
 
-        // Canvas Background Animation
         const canvas = document.getElementById('bits-bg');
         const heroArea = document.getElementById('hero-area');
         const ctx = canvas.getContext('2d');
@@ -398,9 +376,7 @@
         resize();
 
         class Particle {
-            constructor() {
-                this.reset();
-            }
+            constructor() { this.reset(); }
             reset() {
                 this.x = Math.random() * (width || window.innerWidth);
                 this.y = (height || window.innerHeight) + Math.random() * 50; 
@@ -426,14 +402,10 @@
         function animate() {
             if (document.getElementById('home-view').classList.contains('active')) {
                 ctx.clearRect(0, 0, width, height);
-                particles.forEach(p => {
-                    p.update();
-                    p.draw();
-                });
+                particles.forEach(p => { p.update(); p.draw(); });
             }
             requestAnimationFrame(animate);
         }
-        
         animate();
     </script>
 </body>
