@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
+        /* 사용하지 않는 900 두께 제거 */
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
         
         body {
@@ -14,7 +15,6 @@
             background-color: #ffffff;
             color: #050505;
             overflow-x: hidden;
-            transition: background-color 0.5s ease;
         }
 
         .gradient-text {
@@ -23,12 +23,66 @@
             -webkit-text-fill-color: transparent;
         }
 
-        .viii-symbol {
-            font-size: 1.5rem;
-            letter-spacing: 0.2em;
-            font-weight: 700;
-            color: #050505;
+        /* --- 3D Logo Styles --- */
+        .logo-scene {
+            perspective: 800px; 
+            width: 85px; 
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
         }
+
+        .logo-3d-group {
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none;
+        }
+
+        .logo-layer {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.7rem;
+            font-weight: 700;
+            white-space: nowrap;
+            position: absolute;
+            user-select: none;
+            color: #ffffff;
+            letter-spacing: 0.12em;
+            transform: translate(-50%, -50%);
+            top: 50%;
+            left: 50%;
+            backface-visibility: hidden;
+        }
+
+        .layer-face {
+            z-index: 50;
+            -webkit-text-stroke: 1.5px #050505;
+        }
+
+        .layer-side {
+            -webkit-text-stroke: 0.6px #050505;
+        }
+
+        /* --- Dynamic Spacing Style --- */
+        .logo-container {
+            gap: 0px; 
+            transition: gap 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .logo-container.is-active {
+            gap: 32px; 
+        }
+
+        .logo-text-byte {
+            transition: all 0.3s ease;
+            opacity: 0.9;
+        }
+        /* ----------------------- */
 
         canvas#bits-bg {
             position: absolute;
@@ -65,7 +119,6 @@
             text-shadow: 0 0 30px rgba(0, 0, 0, 0.05);
         }
 
-        /* SPA Transition Classes */
         .page-view {
             display: none;
             opacity: 0;
@@ -77,7 +130,6 @@
             opacity: 1;
         }
 
-        /* 네비게이션바 스타일 */
         nav {
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -115,7 +167,6 @@
             font-weight: 700;
         }
 
-        /* Hashtag Styling */
         .hashtag {
             font-size: 0.7rem;
             padding: 0.2rem 0.6rem;
@@ -131,7 +182,6 @@
         .tag-arduino { background-color: #00979d; }
         .tag-ev3 { background-color: #7d7d7d; }
 
-        /* Profile Image Styling */
         .profile-img-container {
             width: 6rem;
             height: 6rem;
@@ -156,23 +206,28 @@
 
     <!-- Navigation -->
     <nav id="main-nav" class="fixed w-full z-50 px-6 py-4 flex justify-between items-center border-b border-black/5 bg-white/40 backdrop-blur-md">
-        <div class="logo-container flex items-center gap-2 cursor-pointer" onclick="showPage('home')">
-            <span class="viii-symbol">[VIII]</span>
-            <span class="text-xl font-bold tracking-tighter">BYTE</span>
+        <!-- Logo Container -->
+        <div class="logo-container flex items-center cursor-pointer group" id="mainLogoContainer" onclick="showPage('home')">
+            <!-- 3D Logo Scene -->
+            <div class="logo-scene" id="navLogoScene">
+                <div class="logo-3d-group" id="navLogoGroup">
+                    <div class="logo-layer layer-face" id="navLogoFace">[VIII]</div>
+                    <div id="navLogoSides" style="transform-style: preserve-3d;"></div>
+                </div>
+            </div>
+            <!-- BYTE Text -->
+            <span class="logo-text-byte text-xl font-bold tracking-tighter" id="byteText">BYTE</span>
         </div>
         
         <div class="flex gap-8 items-center">
             <button onclick="showPage('home')" id="nav-home" class="nav-link text-sm uppercase tracking-widest nav-active">Home</button>
             <button onclick="showPage('crew')" id="nav-crew" class="nav-link text-sm uppercase tracking-widest">Crew</button>
-            <div class="hidden md:block ml-4 pl-8 border-l border-black/10">
-                <span class="text-[10px] text-gray-400 font-mono uppercase tracking-[0.3em]">Convergence Coding Crew</span>
-            </div>
         </div>
     </nav>
 
     <!-- HOME PAGE VIEW -->
-    <main id="home-view" class="page-view active">
-        <header id="hero-area" class="relative h-screen flex flex-col justify-center items-center text-center px-4 overflow-hidden">
+    <main id="home-view" class="page-view active pt-16">
+        <header id="hero-area" class="relative h-[calc(100vh-64px)] flex flex-col justify-center items-center text-center px-4 overflow-hidden">
             <canvas id="bits-bg"></canvas>
             
             <div class="hero-content flex flex-col items-center">
@@ -252,7 +307,7 @@
     </main>
 
     <!-- CREW PAGE VIEW -->
-    <main id="crew-view" class="page-view py-32 px-6">
+    <main id="crew-view" class="page-view pt-44 pb-32 px-6">
         <div class="max-w-7xl mx-auto text-center">
             <div class="mb-24">
                 <span class="text-[#050505] font-bold tracking-[0.5em] text-xs uppercase mb-4 block">Meet the bits</span>
@@ -282,8 +337,6 @@
                         <a href="https://solved.ac/profile/henry0611" target="_blank" rel="noopener noreferrer">
                             <i data-lucide="code-2" class="w-5 h-5 text-gray-400 cursor-pointer hover:text-black transition-colors"></i>
                         </a>
-                        <i data-lucide="github" class="w-5 h-5 text-gray-400 cursor-pointer hover:text-black transition-colors"></i>
-                        <i data-lucide="mail" class="w-5 h-5 text-gray-400 cursor-pointer hover:text-black transition-colors"></i>
                     </div>
                 </div>
 
@@ -298,8 +351,12 @@
                         <span class="hashtag tag-arduino">#Arduino</span>
                     </div>
                     <div class="flex justify-center gap-4 pt-4 border-t border-black/5">
-                        <i data-lucide="github" class="w-5 h-5 text-gray-400 cursor-pointer hover:text-black transition-colors"></i>
-                        <i data-lucide="cpu" class="w-5 h-5 text-gray-400 cursor-pointer hover:text-black transition-colors"></i>
+                        <a href="https://www.instagram.com/jx.k_s" target="_blank" rel="noopener noreferrer">
+                            <i data-lucide="instagram" class="w-5 h-5 text-gray-400 cursor-pointer hover:text-black transition-colors"></i>
+                        </a>
+                        <a href="https://solved.ac/profile/secomes" target="_blank" rel="noopener noreferrer">
+                            <i data-lucide="code-2" class="w-5 h-5 text-gray-400 cursor-pointer hover:text-black transition-colors"></i>
+                        </a>
                     </div>
                 </div>
 
@@ -318,11 +375,6 @@
     <!-- Footer -->
     <footer class="py-16 px-6 text-center border-t border-black/5 bg-[#fafafa]">
         <div class="max-w-7xl mx-auto flex flex-col items-center gap-6">
-            <div class="flex items-center gap-6">
-                <a href="https://github.com" target="_blank" class="text-gray-400 hover:text-black transition-colors"><i data-lucide="github" class="w-5 h-5"></i></a>
-                <a href="https://discord.com" target="_blank" class="text-gray-400 hover:text-black transition-colors"><i data-lucide="message-circle" class="w-5 h-5"></i></a>
-                <a href="https://instagram.com" target="_blank" class="text-gray-400 hover:text-black transition-colors"><i data-lucide="instagram" class="w-5 h-5"></i></a>
-            </div>
             <div class="flex items-center gap-2 mb-2 group">
                 <i data-lucide="mail" class="w-4 h-4 text-gray-400 group-hover:text-black transition-colors"></i>
                 <a href="https://mail.google.com/mail/?view=cm&fs=1&to=wearebyte08@gmail.com" target="_blank" rel="noopener noreferrer" class="text-sm font-medium text-gray-500 hover:text-black transition-colors">
@@ -339,6 +391,61 @@
     <script>
         lucide.createIcons();
 
+        // --- 3D Logo Initialization ---
+        const mainLogoContainer = document.getElementById('mainLogoContainer');
+        const navLogoScene = document.getElementById('navLogoScene');
+        const navLogoFace = document.getElementById('navLogoFace');
+        const navLogoSides = document.getElementById('navLogoSides');
+        const navLogoGroup = document.getElementById('navLogoGroup');
+        const thicknessCount = 10; 
+
+        function init3DLogo() {
+            const transformBase = "translate(-50%, -50%)";
+            navLogoFace.style.transform = `${transformBase} translateZ(${thicknessCount}px)`;
+
+            for (let i = 0; i < thicknessCount; i++) {
+                const layer = document.createElement('div');
+                layer.className = 'logo-layer layer-side';
+                layer.textContent = '[VIII]';
+                layer.style.transform = `${transformBase} translateZ(${i}px)`;
+                const brightness = 1 - (i / thicknessCount) * 0.15;
+                layer.style.filter = `brightness(${brightness})`;
+                navLogoSides.appendChild(layer);
+            }
+        }
+
+        init3DLogo();
+
+        // --- Interactive Spacing & 3D Rotation ---
+        document.addEventListener('mousemove', (e) => {
+            const rect = navLogoScene.getBoundingClientRect();
+            const logoCenterX = rect.left + rect.width / 2;
+            const logoCenterY = rect.top + rect.height / 2;
+            
+            const deltaX = (e.clientX - logoCenterX) / (window.innerWidth / 2);
+            const deltaY = (e.clientY - logoCenterY) / (window.innerHeight / 2);
+            
+            const rotateY = deltaX * 45; 
+            const rotateX = -deltaY * 45; 
+            navLogoGroup.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+
+            if (!mainLogoContainer.classList.contains('is-active')) {
+                mainLogoContainer.classList.add('is-active');
+            }
+        });
+
+        document.addEventListener('mouseleave', () => {
+            navLogoGroup.style.transition = 'transform 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+            navLogoGroup.style.transform = `rotateX(0deg) rotateY(0deg)`;
+            
+            mainLogoContainer.classList.remove('is-active');
+
+            setTimeout(() => {
+                navLogoGroup.style.transition = 'transform 0.1s ease-out';
+            }, 1200);
+        });
+
+        // --- Page Navigation ---
         function showPage(pageId) {
             document.querySelectorAll('.page-view').forEach(view => {
                 view.classList.remove('active');
@@ -360,6 +467,7 @@
             else nav.classList.remove('scrolled');
         });
 
+        // --- Canvas Animation ---
         const canvas = document.getElementById('bits-bg');
         const heroArea = document.getElementById('hero-area');
         const ctx = canvas.getContext('2d');
