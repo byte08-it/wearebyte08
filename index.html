@@ -10,14 +10,14 @@
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
         
         body {
-            font-family: 'Space+Grotesk', sans-serif;
-            background-color: #050505;
-            color: #ffffff;
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #ffffff;
+            color: #050505;
             overflow-x: hidden;
         }
 
         .gradient-text {
-            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+            background: linear-gradient(90deg, #050505 0%, #444444 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -26,81 +26,96 @@
             font-size: 1.5rem;
             letter-spacing: 0.2em;
             font-weight: 700;
-            color: #4facfe;
+            color: #050505;
         }
 
+        /* 캔버스를 특정 영역 안에 고정 */
         canvas#bits-bg {
-            position: fixed;
+            position: absolute;
             top: 0;
             left: 0;
-            z-index: -1;
-            opacity: 0.4;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.6; 
+            pointer-events: none; /* 클릭 방해 금지 */
         }
 
         .glass-card {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.03);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
         }
 
         .coming-soon-glow {
-            text-shadow: 0 0 20px rgba(79, 172, 254, 0.5);
+            text-shadow: 0 0 30px rgba(0, 0, 0, 0.05);
         }
     </style>
 </head>
 <body>
 
-    <canvas id="bits-bg"></canvas>
-
     <!-- Navigation -->
-    <nav class="fixed w-full z-50 px-6 py-4 flex justify-between items-center border-b border-white/5 bg-black/20 backdrop-blur-md">
+    <nav class="fixed w-full z-50 px-6 py-4 flex justify-between items-center border-b border-black/5 bg-white/80 backdrop-blur-md">
         <div class="flex items-center gap-2">
             <span class="viii-symbol">[VIII]</span>
             <span class="text-xl font-bold tracking-tighter">BYTE</span>
         </div>
-        <div>
-            <span class="text-xs text-gray-500 font-mono uppercase tracking-widest">Convergence Coding Crew</span>
+        <div class="hidden md:block">
+            <span class="text-[10px] text-gray-400 font-mono uppercase tracking-[0.3em]">Convergence Coding Crew</span>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <header class="h-screen flex flex-col justify-center items-center text-center px-4">
-        <div class="mb-4 inline-block px-3 py-1 border border-[#4facfe] rounded-full text-xs text-[#4facfe] animate-pulse">
-            Coding Crew for Convergence
-        </div>
-        <h1 class="text-6xl md:text-8xl font-bold mb-6 tracking-tight">
-            8 Bits to <span class="gradient-text">1 BYTE</span>
-        </h1>
-        <p class="text-gray-400 max-w-2xl text-lg md:text-xl leading-relaxed">
-            8개의 비트가 모여 하나의 바이트를 이루듯,<br>
-            함께 성장해 나갑니다.
-        </p>
-        <div class="mt-16 flex flex-col items-center">
-            <div class="w-px h-16 bg-gradient-to-b from-[#4facfe] to-transparent"></div>
+    <!-- Hero Section (애니메이션이 이 안에서만 작동합니다) -->
+    <header id="hero-area" class="relative h-screen flex flex-col justify-center items-center text-center px-4 overflow-hidden">
+        <!-- 캔버스를 헤더 안으로 이동 -->
+        <canvas id="bits-bg"></canvas>
+        
+        <div class="hero-content">
+            <div class="mb-6 inline-block px-4 py-1.5 border border-black/10 rounded-full text-[11px] font-medium tracking-widest text-gray-500 uppercase">
+                Coding Crew for Convergence
+            </div>
+            <h1 class="text-6xl md:text-9xl font-bold mb-8 tracking-tighter leading-none">
+                8 Bits to <span class="gradient-text">1 BYTE</span>
+            </h1>
+            <p class="text-gray-400 max-w-2xl text-lg md:text-xl leading-relaxed font-light">
+                8개의 비트가 모여 하나의 바이트를 이루듯,<br>
+                함께 성장하며 새로운 가능성을 만들어갑니다.
+            </p>
+            <div class="mt-20 flex flex-col items-center">
+                <div class="w-px h-16 bg-gradient-to-b from-black/20 to-transparent"></div>
+            </div>
         </div>
     </header>
 
     <!-- Coming Soon Section -->
-    <section class="py-32 px-6 flex flex-col items-center justify-center text-center">
-        <div class="glass-card p-12 md:p-20 rounded-[3rem] max-w-4xl w-full">
-            <h2 class="text-4xl md:text-6xl font-bold mb-6 coming-soon-glow">
-                Coming Soon<span class="text-[#4facfe]">...</span>
+    <section class="relative py-32 px-6 flex flex-col items-center justify-center text-center bg-white">
+        <div class="glass-card p-12 md:p-24 rounded-[3rem] max-w-5xl w-full relative z-10">
+            <h2 class="text-5xl md:text-7xl font-bold mb-8 coming-soon-glow tracking-tight">
+                Coming Soon<span class="text-gray-300">...</span>
             </h2>
-            <p class="text-gray-500 text-lg mb-10">
-                더 많은 비트들이 모여 놀라운 융합의 장을 준비하고 있습니다.
+            <p class="text-gray-400 text-lg md:text-xl mb-12 font-light">
+                더 넓은 세상으로 나아가기 위한 융합의 장을 준비하고 있습니다.
             </p>
-            <div class="flex justify-center gap-4">
-                <div class="w-2 h-2 rounded-full bg-[#4facfe] animate-bounce" style="animation-delay: 0s"></div>
-                <div class="w-2 h-2 rounded-full bg-[#4facfe] animate-bounce" style="animation-delay: 0.2s"></div>
-                <div class="w-2 h-2 rounded-full bg-[#4facfe] animate-bounce" style="animation-delay: 0.4s"></div>
+            <div class="flex justify-center gap-6">
+                <div class="w-2 h-2 rounded-full bg-black/80 animate-bounce" style="animation-delay: 0s"></div>
+                <div class="w-2 h-2 rounded-full bg-black/80 animate-bounce" style="animation-delay: 0.2s"></div>
+                <div class="w-2 h-2 rounded-full bg-black/80 animate-bounce" style="animation-delay: 0.4s"></div>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="py-12 px-6 text-center border-t border-white/5">
-        <div class="text-xs text-gray-600">
-            &copy; 2024 BYTE Coding Crew. [VIII] | Powered by Convergence
+    <footer class="py-16 px-6 text-center border-t border-black/5">
+        <div class="flex flex-col items-center gap-4">
+            <div class="text-[10px] text-gray-400 uppercase tracking-widest">
+                &copy; 2024 BYTE Coding Crew. [VIII] | Powered by Convergence
+            </div>
         </div>
     </footer>
 
@@ -110,13 +125,15 @@
 
         // Canvas Background Animation
         const canvas = document.getElementById('bits-bg');
+        const heroArea = document.getElementById('hero-area');
         const ctx = canvas.getContext('2d');
         let width, height;
         const particles = [];
 
         function resize() {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
+            // 브라우저 전체가 아닌 히어로 섹션의 크기를 가져옴
+            width = canvas.width = heroArea.offsetWidth;
+            height = canvas.height = heroArea.offsetHeight;
         }
 
         window.addEventListener('resize', resize);
@@ -128,24 +145,26 @@
             }
             reset() {
                 this.x = Math.random() * width;
-                this.y = Math.random() * height;
-                this.size = Math.random() * 2;
-                this.speed = Math.random() * 0.5 + 0.2;
+                this.y = height + Math.random() * 50; 
+                this.size = Math.random() * 1.2 + 0.8;
+                this.speed = Math.random() * 1.0 + 0.2; 
                 this.text = Math.random() > 0.5 ? '1' : '0';
-                this.opacity = Math.random() * 0.5;
+                const gray = Math.floor(Math.random() * 100 + 120); 
+                this.color = `rgba(${gray}, ${gray}, ${gray}, ${Math.random() * 0.3 + 0.1})`;
             }
             update() {
                 this.y -= this.speed;
-                if (this.y < -20) this.reset();
+                if (this.y < -30) this.reset();
             }
             draw() {
-                ctx.fillStyle = `rgba(79, 172, 254, ${this.opacity})`;
-                ctx.font = `${this.size * 10}px monospace`;
+                ctx.fillStyle = this.color;
+                ctx.font = `${this.size * 12}px monospace`;
                 ctx.fillText(this.text, this.x, this.y);
             }
         }
 
-        for (let i = 0; i < 100; i++) particles.push(new Particle());
+        // 영역이 좁아졌으므로 입자 밀도를 적절히 조절
+        for (let i = 0; i < 70; i++) particles.push(new Particle());
 
         function animate() {
             ctx.clearRect(0, 0, width, height);
@@ -155,6 +174,8 @@
             });
             requestAnimationFrame(animate);
         }
+        
+        // 초기화 후 애니메이션 시작
         animate();
     </script>
 </body>
