@@ -7,7 +7,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        /* 사용하지 않는 900 두께 제거 */
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
         
         body {
@@ -15,6 +14,7 @@
             background-color: #ffffff;
             color: #050505;
             overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .gradient-text {
@@ -26,12 +26,19 @@
         /* --- 3D Logo Styles --- */
         .logo-scene {
             perspective: 800px; 
-            width: 85px; 
-            height: 60px;
+            width: 60px;
+            height: 45px;
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
+        }
+
+        @media (min-width: 768px) {
+            .logo-scene {
+                width: 85px;
+                height: 60px;
+            }
         }
 
         .logo-3d-group {
@@ -46,7 +53,7 @@
 
         .logo-layer {
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.7rem;
+            font-size: 1.2rem;
             font-weight: 700;
             white-space: nowrap;
             position: absolute;
@@ -59,30 +66,41 @@
             backface-visibility: hidden;
         }
 
+        @media (min-width: 768px) {
+            .logo-layer {
+                font-size: 1.7rem;
+            }
+        }
+
         .layer-face {
             z-index: 50;
-            -webkit-text-stroke: 1.5px #050505;
+            -webkit-text-stroke: 1.2px #050505;
         }
 
         .layer-side {
-            -webkit-text-stroke: 0.6px #050505;
+            -webkit-text-stroke: 0.5px #050505;
         }
 
         /* --- Dynamic Spacing Style --- */
         .logo-container {
-            gap: 0px; 
+            gap: 4px; 
             transition: gap 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         .logo-container.is-active {
-            gap: 32px; 
+            gap: 12px; 
+        }
+
+        @media (min-width: 768px) {
+            .logo-container.is-active {
+                gap: 32px; 
+            }
         }
 
         .logo-text-byte {
             transition: all 0.3s ease;
             opacity: 0.9;
         }
-        /* ----------------------- */
 
         canvas#bits-bg {
             position: absolute;
@@ -99,24 +117,14 @@
             background: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(20px);
             border: 1px solid rgba(0, 0, 0, 0.08);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.03);
-            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .motto-card:hover, .member-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.06);
-            border-color: rgba(0, 0, 0, 0.2);
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 10;
-            width: 100%;
-        }
-
-        .coming-soon-glow {
-            text-shadow: 0 0 30px rgba(0, 0, 0, 0.05);
+        .project-card:hover, .member-card:hover, .motto-card:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.08);
+            border-color: rgba(0, 0, 0, 0.15);
         }
 
         .page-view {
@@ -130,13 +138,9 @@
             opacity: 1;
         }
 
-        nav {
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
         nav.scrolled {
-            padding-top: 0.75rem;
-            padding-bottom: 0.75rem;
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
             background-color: rgba(255, 255, 255, 0.9);
             border-bottom-color: rgba(0, 0, 0, 0.1);
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
@@ -168,220 +172,299 @@
         }
 
         .hashtag {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             padding: 0.2rem 0.6rem;
             border-radius: 9999px;
             font-weight: 600;
             color: white;
             display: inline-block;
-            margin-bottom: 0.25rem;
         }
 
-        .tag-python { background: linear-gradient(135deg, #3776ab 0%, #3776ab 50%, #ffd43b 50%, #ffd43b 100%); }
-        .tag-frontend { background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%); }
+        .tag-python { background: #3776ab; }
+        .tag-frontend { background: #4facfe; }
         .tag-arduino { background-color: #00979d; }
-        .tag-ev3 { background-color: #7d7d7d; }
+        .tag-ai { background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); }
+        .tag-hardware { background-color: #ef4444; }
+        .tag-brand { background: #050505; }
+        .tag-completed { background-color: #dcfce7; color: #166534; }
 
-        .profile-img-container {
-            width: 6rem;
-            height: 6rem;
-            border-radius: 9999px;
-            margin: 0 auto 2rem auto;
+        .profile-img-container, .project-img-container {
+            border-radius: 1.5rem;
             overflow: hidden;
             background-color: #f3f4f6;
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 2px solid rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.05);
         }
 
-        .profile-img-container img {
+        .project-img-container {
+            width: 100%;
+            aspect-ratio: 16 / 10;
+            margin-bottom: 1.5rem;
+        }
+
+        .project-img-container img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .project-card:hover .project-img-container img {
+            transform: scale(1.05);
+        }
+
+        /* Modal Styles */
+        #project-modal {
+            transition: all 0.3s ease;
+        }
+        
+        .modal-overlay {
+            background-color: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(8px);
+        }
+
+        .modal-content {
+            transform: scale(0.9);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        #project-modal.active .modal-content {
+            transform: scale(1);
+            opacity: 1;
         }
     </style>
 </head>
 <body>
 
     <!-- Navigation -->
-    <nav id="main-nav" class="fixed w-full z-50 px-6 py-4 flex justify-between items-center border-b border-black/5 bg-white/40 backdrop-blur-md">
+    <nav id="main-nav" class="fixed w-full z-50 px-4 md:px-6 py-3 md:py-4 flex justify-between items-center border-b border-black/5 bg-white/40 backdrop-blur-md">
         <!-- Logo Container -->
         <div class="logo-container flex items-center cursor-pointer group" id="mainLogoContainer" onclick="showPage('home')">
-            <!-- 3D Logo Scene -->
             <div class="logo-scene" id="navLogoScene">
                 <div class="logo-3d-group" id="navLogoGroup">
                     <div class="logo-layer layer-face" id="navLogoFace">[VIII]</div>
                     <div id="navLogoSides" style="transform-style: preserve-3d;"></div>
                 </div>
             </div>
-            <!-- BYTE Text -->
-            <span class="logo-text-byte text-xl font-bold tracking-tighter" id="byteText">BYTE</span>
+            <span class="logo-text-byte text-lg md:text-xl font-bold tracking-tighter" id="byteText">BYTE</span>
         </div>
         
-        <div class="flex gap-8 items-center">
-            <button onclick="showPage('home')" id="nav-home" class="nav-link text-sm uppercase tracking-widest nav-active">Home</button>
-            <button onclick="showPage('crew')" id="nav-crew" class="nav-link text-sm uppercase tracking-widest">Crew</button>
+        <div class="flex gap-4 md:gap-8 items-center">
+            <button onclick="showPage('home')" id="nav-home" class="nav-link text-[10px] md:text-xs uppercase tracking-widest nav-active">Home</button>
+            <button onclick="showPage('project')" id="nav-project" class="nav-link text-[10px] md:text-xs uppercase tracking-widest">Project</button>
+            <button onclick="showPage('crew')" id="nav-crew" class="nav-link text-[10px] md:text-xs uppercase tracking-widest">Crew</button>
         </div>
     </nav>
 
     <!-- HOME PAGE VIEW -->
-    <main id="home-view" class="page-view active pt-16">
-        <header id="hero-area" class="relative h-[calc(100vh-64px)] flex flex-col justify-center items-center text-center px-4 overflow-hidden">
+    <main id="home-view" class="page-view active pt-14 md:pt-16">
+        <header id="hero-area" class="relative h-[80vh] md:h-[calc(100vh-64px)] flex flex-col justify-center items-center text-center px-6 overflow-hidden">
             <canvas id="bits-bg"></canvas>
-            
             <div class="hero-content flex flex-col items-center">
-                <div class="mb-6 inline-block px-4 py-1.5 border border-black/10 rounded-full text-[11px] font-medium tracking-widest text-gray-500 uppercase">
+                <div class="mb-6 inline-block px-3 py-1 border border-black/10 rounded-full text-[9px] md:text-[11px] font-medium tracking-widest text-gray-500 uppercase">
                     Coding Crew for Convergence
                 </div>
-                <h1 class="text-6xl md:text-9xl font-bold mb-8 tracking-tighter leading-none">
+                <h1 class="text-4xl sm:text-5xl md:text-9xl font-bold mb-6 md:mb-8 tracking-tighter leading-tight md:leading-none">
                     8 Bits to <span class="gradient-text">1 BYTE</span>
                 </h1>
-                <p class="text-gray-400 max-w-2xl mx-auto text-lg md:text-xl leading-relaxed font-light">
-                    8개의 비트가 모여 하나의 바이트를 이루듯,<br>
+                <p class="text-gray-400 max-w-2xl mx-auto text-sm md:text-xl leading-relaxed font-light px-4">
+                    8개의 비트가 모여 하나의 바이트를 이루듯,<br class="hidden md:block">
                     함께 성장하며 새로운 가능성을 만들어갑니다.
                 </p>
-                <div class="mt-20 flex flex-col items-center">
-                    <div class="w-px h-16 bg-gradient-to-b from-black/20 to-transparent"></div>
+                <div class="mt-12 md:mt-20 flex flex-col items-center">
+                    <div class="w-px h-12 md:h-16 bg-gradient-to-b from-black/20 to-transparent"></div>
                 </div>
             </div>
         </header>
 
-        <section class="py-32 px-6 bg-[#fafafa]">
+        <section class="py-20 md:py-32 px-6 bg-[#fafafa]">
             <div class="max-w-7xl mx-auto text-center">
-                <div class="mb-20">
-                    <h2 class="text-3xl md:text-5xl font-bold tracking-tight mb-4 text-black/90">Our Motto</h2>
-                    <div class="w-12 h-1 bg-black mx-auto opacity-20"></div>
+                <div class="mb-12 md:mb-20">
+                    <h2 class="text-2xl md:text-5xl font-bold tracking-tight mb-4 text-black/90">Our Motto</h2>
+                    <div class="w-8 md:w-12 h-1 bg-black mx-auto opacity-20"></div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
-                    <div class="glass-card motto-card p-10 rounded-[2rem] bg-white">
-                        <div class="w-14 h-14 bg-black text-white rounded-2xl flex items-center justify-center mb-8">
-                            <i data-lucide="users" class="w-7 h-7"></i>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 text-left">
+                    <div class="glass-card motto-card p-8 md:p-10 rounded-[1.5rem] md:rounded-[2rem] bg-white">
+                        <div class="w-12 h-12 md:w-14 md:h-14 bg-black text-white rounded-xl md:rounded-2xl flex items-center justify-center mb-6 md:mb-8">
+                            <i data-lucide="users" class="w-6 h-6 md:w-7 md:h-7"></i>
                         </div>
-                        <h3 class="text-2xl font-bold mb-4">모두의 기회의 장</h3>
-                        <p class="text-gray-500 leading-relaxed font-light">
+                        <h3 class="text-xl md:text-2xl font-bold mb-3 md:mb-4">모두의 기회의 장</h3>
+                        <p class="text-sm md:text-base text-gray-500 leading-relaxed font-light">
                             모든 개발자들의 커뮤니티 역할을 수행하며, 누구나 팀을 구하거나 원하는 프로젝트에 자유롭게 참가할 수 있는 환경을 제공합니다.
                         </p>
                     </div>
 
-                    <div class="glass-card motto-card p-10 rounded-[2rem] bg-white">
-                        <div class="w-14 h-14 bg-black text-white rounded-2xl flex items-center justify-center mb-8">
-                            <i data-lucide="atom" class="w-7 h-7"></i>
+                    <div class="glass-card motto-card p-8 md:p-10 rounded-[1.5rem] md:rounded-[2rem] bg-white">
+                        <div class="w-12 h-12 md:w-14 md:h-14 bg-black text-white rounded-xl md:rounded-2xl flex items-center justify-center mb-6 md:mb-8">
+                            <i data-lucide="atom" class="w-6 h-6 md:w-7 md:h-7"></i>
                         </div>
-                        <h3 class="text-2xl font-bold mb-4">융합적인 과학의 세계</h3>
-                        <p class="text-gray-500 leading-relaxed font-light">
+                        <h3 class="text-xl md:text-2xl font-bold mb-3 md:mb-4">융합적인 과학의 세계</h3>
+                        <p class="text-sm md:text-base text-gray-500 leading-relaxed font-light">
                             정보 분야에만 국한되지 않습니다. 환경, 예술 등 서로 다른 학문과 기술의 경계를 허물고 도메인 간의 융합을 통해 새로운 솔루션을 창조합니다.
                         </p>
                     </div>
 
-                    <div class="glass-card motto-card p-10 rounded-[2rem] bg-white">
-                        <div class="w-14 h-14 bg-black text-white rounded-2xl flex items-center justify-center mb-8">
-                            <i data-lucide="zap" class="w-7 h-7"></i>
+                    <div class="glass-card motto-card p-8 md:p-10 rounded-[1.5rem] md:rounded-[2rem] bg-white">
+                        <div class="w-12 h-12 md:w-14 md:h-14 bg-black text-white rounded-xl md:rounded-2xl flex items-center justify-center mb-6 md:mb-8">
+                            <i data-lucide="zap" class="w-6 h-6 md:w-7 md:h-7"></i>
                         </div>
-                        <h3 class="text-2xl font-bold mb-4">일상 속 불편함 해결</h3>
-                        <p class="text-gray-500 leading-relaxed font-light">
+                        <h3 class="text-xl md:text-2xl font-bold mb-3 md:mb-4">일상 속 불편함 해결</h3>
+                        <p class="text-sm md:text-base text-gray-500 leading-relaxed font-light">
                             거창한 이론보다 실질적인 변화를 지향합니다. 우리 주변의 작은 불편함들을 코드로 해결하며 세상을 조금씩 바꿔나갑니다.
                         </p>
                     </div>
                 </div>
             </div>
         </section>
-
-        <!-- Coming Soon Section -->
-        <section class="relative py-32 px-6 flex flex-col items-center justify-center text-center bg-white">
-            <div class="glass-card p-12 md:p-24 rounded-[3rem] max-w-5xl w-full relative z-10 bg-[#fdfdfd]">
-                <h2 class="text-5xl md:text-7xl font-bold mb-8 coming-soon-glow tracking-tight">
-                    Coming Soon<span class="text-gray-300">...</span>
-                </h2>
-                <p class="text-gray-400 text-lg md:text-xl mb-12 font-light">
-                    더 넓은 세상으로 나아가기 위한 융합의 장을 준비하고 있습니다.
-                </p>
-                <div class="flex justify-center gap-6">
-                    <div class="w-2 h-2 rounded-full bg-black/80 animate-bounce" style="animation-delay: 0s"></div>
-                    <div class="w-2 h-2 rounded-full bg-black/80 animate-bounce" style="animation-delay: 0.2s"></div>
-                    <div class="w-2 h-2 rounded-full bg-black/80 animate-bounce" style="animation-delay: 0.4s"></div>
-                </div>
-            </div>
-        </section>
     </main>
 
-    <!-- CREW PAGE VIEW -->
-    <main id="crew-view" class="page-view pt-44 pb-32 px-6">
+    <!-- PROJECT PAGE VIEW -->
+    <main id="project-view" class="page-view pt-28 md:pt-44 pb-20 md:pb-32 px-6">
         <div class="max-w-7xl mx-auto text-center">
-            <div class="mb-24">
-                <span class="text-[#050505] font-bold tracking-[0.5em] text-xs uppercase mb-4 block">Meet the bits</span>
-                <h2 class="text-5xl md:text-7xl font-bold tracking-tighter mb-6">Our Crew</h2>
-                <p class="text-gray-400 max-w-xl mx-auto font-light">
+            <div class="mb-16 md:mb-24">
+                <span class="text-[#050505] font-bold tracking-[0.4em] md:tracking-[0.5em] text-[10px] md:text-xs uppercase mb-3 md:mb-4 block">Our creations</span>
+                <h2 class="text-4xl md:text-7xl font-bold tracking-tighter mb-4 md:mb-6">Projects</h2>
+                <p class="text-sm md:text-base text-gray-400 max-w-xl mx-auto font-light leading-relaxed">
+                    상상을 현실로 바꾸는 과정.<br>기술의 융합을 통해 만들어낸 결과물들을 소개합니다.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-left">
+                <!-- Project Card (Main List) -->
+                <div class="glass-card project-card p-6 md:p-8 rounded-[2rem] bg-white flex flex-col cursor-pointer group" onclick="openModal('byte-web')">
+                    <div class="project-img-container">
+                        <img src="./byteofficialwebsite.png" alt="BYTE Official Website" onerror="this.src='https://api.dicebear.com/7.x/shapes/svg?seed=BYTE&backgroundColor=050505';">
+                    </div>
+                    <div class="flex-grow">
+                        <div class="flex gap-2 mb-4">
+                            <span class="hashtag tag-frontend">#WebDesign</span>
+                        </div>
+                        <h4 class="text-xl md:text-2xl font-bold mb-3 tracking-tight">BYTE Official Website</h4>
+                        <!-- Divider & Completed Tag -->
+                        <div class="w-full h-px bg-black/5 my-4"></div>
+                        <div class="flex">
+                            <span class="hashtag tag-completed uppercase text-[9px] tracking-widest font-bold px-3 py-1">Completed</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- What's Next Card -->
+                <div class="glass-card project-card p-8 md:p-10 rounded-[2rem] border-dashed border-gray-300 bg-gray-50/30 flex flex-col justify-center items-center text-center min-h-[350px]">
+                    <div class="w-16 h-16 md:w-20 md:h-20 rounded-full border-2 border-dashed border-gray-300 flex items-center justify-center text-gray-300 mb-6">
+                        <i data-lucide="plus" class="w-6 h-6 md:w-8 md:h-8"></i>
+                    </div>
+                    <h4 class="text-lg md:text-xl font-bold text-gray-400 italic">What's next..</h4>
+                    <p class="text-gray-400 text-[10px] md:text-xs mt-4 uppercase tracking-widest">WAIT FOR PROJECT #2/8</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Project Detail Modal (Popup) -->
+    <div id="project-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4">
+        <div class="modal-overlay absolute inset-0" onclick="closeModal()"></div>
+        <div class="modal-content relative glass-card bg-white w-full max-w-2xl rounded-[2.5rem] overflow-hidden flex flex-col max-h-[90vh]">
+            <!-- Close Button -->
+            <button onclick="closeModal()" class="absolute top-6 right-6 z-10 p-2 rounded-full hover:bg-black/5 transition-colors">
+                <i data-lucide="x" class="w-6 h-6 text-gray-400"></i>
+            </button>
+            
+            <div class="overflow-y-auto p-8 md:p-12">
+                <!-- Modal Image -->
+                <div class="project-img-container h-48 md:h-64 mb-8">
+                    <img id="modal-img" src="" alt="">
+                </div>
+                
+                <!-- Modal Header -->
+                <div id="modal-tags" class="flex gap-2 mb-4"></div>
+                <h3 id="modal-title" class="text-3xl md:text-4xl font-bold mb-6 tracking-tight text-black"></h3>
+                
+                <!-- Modal Body (Only Description & Action) -->
+                <div class="space-y-8 text-gray-500 font-light leading-relaxed">
+                    <div class="pb-8 border-b border-black/5">
+                        <h5 class="text-xs uppercase tracking-widest font-bold text-black/40 mb-3">Description</h5>
+                        <p id="modal-desc" class="text-base text-gray-600"></p>
+                    </div>
+
+                    <!-- Notion Redirect Button Inside Modal -->
+                    <div>
+                        <button id="modal-notion-btn" onclick="" class="w-full py-5 bg-black text-white rounded-[1.5rem] text-[12px] font-bold tracking-[0.2em] uppercase hover:bg-black/80 transition-all flex items-center justify-center gap-3">
+                            자세히보기 (NOTION)
+                            <i data-lucide="external-link" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CREW PAGE VIEW -->
+    <main id="crew-view" class="page-view pt-28 md:pt-44 pb-20 md:pb-32 px-6">
+        <div class="max-w-7xl mx-auto text-center">
+            <div class="mb-16 md:mb-24">
+                <span class="text-[#050505] font-bold tracking-[0.4em] md:tracking-[0.5em] text-[10px] md:text-xs uppercase mb-3 md:mb-4 block">Meet the bits</span>
+                <h2 class="text-4xl md:text-7xl font-bold tracking-tighter mb-4 md:mb-6">Our Crew</h2>
+                <p class="text-sm md:text-base text-gray-400 max-w-xl mx-auto font-light leading-relaxed">
                     8개의 비트가 모여 만드는 하나의 시너지.<br>우리는 코드로 새로운 가치를 증명합니다.
                 </p>
             </div>
 
-            <div id="crew-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 text-center">
-                <!-- Member 1: HENRY KIM -->
-                <div class="glass-card member-card p-10 rounded-[2.5rem] border-black/10">
-                    <div class="profile-img-container">
+            <div id="crew-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 text-center">
+                <div class="glass-card member-card p-8 md:p-10 rounded-[2rem] md:rounded-[2.5rem] border-black/10">
+                    <div class="profile-img-container mb-6 w-20 h-20 md:w-24 md:h-24 mx-auto">
                         <img src="./khrprofile.png" alt="Henry Kim" onerror="this.src='https://api.dicebear.com/7.x/avataaars/svg?seed=Henry'; this.onerror=null;">
                     </div>
-                    <h4 class="text-2xl font-bold mb-6 uppercase tracking-tight">Henry Kim</h4>
-                    <div class="flex flex-wrap justify-center gap-2 mb-8">
+                    <h4 class="text-xl md:text-2xl font-bold mb-4 md:mb-6 uppercase tracking-tight">Henry Kim</h4>
+                    <div class="flex flex-wrap justify-center gap-1.5 md:gap-2 mb-6 md:mb-8">
                         <span class="hashtag tag-python">#Python</span>
                         <span class="hashtag tag-frontend">#Frontend</span>
                         <span class="hashtag tag-arduino">#Arduino</span>
                         <span class="hashtag tag-ev3">#EV3</span>
                     </div>
-                    <div class="flex justify-center gap-4 pt-4 border-t border-black/5">
-                        <a href="https://www.instagram.com/_no.lxi/" target="_blank" rel="noopener noreferrer">
-                            <i data-lucide="instagram" class="w-5 h-5 text-gray-400 cursor-pointer hover:text-black transition-colors"></i>
-                        </a>
-                        <a href="https://solved.ac/profile/henry0611" target="_blank" rel="noopener noreferrer">
-                            <i data-lucide="code-2" class="w-5 h-5 text-gray-400 cursor-pointer hover:text-black transition-colors"></i>
-                        </a>
+                    <div class="flex justify-center gap-5 pt-4 border-t border-black/5">
+                        <a href="https://www.instagram.com/_no.lxi/" target="_blank"><i data-lucide="instagram" class="w-5 h-5 text-gray-400 hover:text-black transition-colors"></i></a>
+                        <a href="https://solved.ac/profile/henry0611" target="_blank"><i data-lucide="code-2" class="w-5 h-5 text-gray-400 hover:text-black transition-colors"></i></a>
                     </div>
                 </div>
 
-                <!-- Member 2: JUNSIK KIM -->
-                <div class="glass-card member-card p-10 rounded-[2.5rem] border-black/5">
-                    <div class="profile-img-container">
+                <div class="glass-card member-card p-8 md:p-10 rounded-[2rem] md:rounded-[2.5rem] border-black/5">
+                    <div class="profile-img-container mb-6 w-20 h-20 md:w-24 md:h-24 mx-auto">
                         <img src="YOUR_PHOTO_URL_HERE" alt="Junsik Kim" onerror="this.src='https://api.dicebear.com/7.x/avataaars/svg?seed=Junsik'; this.onerror=null;">
                     </div>
-                    <h4 class="text-2xl font-bold mb-6 uppercase tracking-tight">Junsik Kim</h4>
-                    <div class="flex flex-wrap justify-center gap-2 mb-8">
+                    <h4 class="text-xl md:text-2xl font-bold mb-4 md:mb-6 uppercase tracking-tight">Junsik Kim</h4>
+                    <div class="flex flex-wrap justify-center gap-1.5 md:gap-2 mb-6 md:mb-8">
                         <span class="hashtag tag-python">#Python</span>
                         <span class="hashtag tag-arduino">#Arduino</span>
                     </div>
-                    <div class="flex justify-center gap-4 pt-4 border-t border-black/5">
-                        <a href="https://www.instagram.com/jx.k_s" target="_blank" rel="noopener noreferrer">
-                            <i data-lucide="instagram" class="w-5 h-5 text-gray-400 cursor-pointer hover:text-black transition-colors"></i>
-                        </a>
-                        <a href="https://solved.ac/profile/secomes" target="_blank" rel="noopener noreferrer">
-                            <i data-lucide="code-2" class="w-5 h-5 text-gray-400 cursor-pointer hover:text-black transition-colors"></i>
-                        </a>
+                    <div class="flex justify-center gap-5 pt-4 border-t border-black/5">
+                        <a href="https://www.instagram.com/jx.k_s" target="_blank"><i data-lucide="instagram" class="w-5 h-5 text-gray-400 hover:text-black transition-colors"></i></a>
+                        <a href="https://solved.ac/profile/secomes" target="_blank"><i data-lucide="code-2" class="w-5 h-5 text-gray-400 hover:text-black transition-colors"></i></a>
                     </div>
                 </div>
 
-                <!-- Who's Next Card -->
-                <div class="glass-card member-card p-10 rounded-[2.5rem] border-dashed border-gray-300 bg-gray-50/30 flex flex-col justify-center items-center">
-                    <div class="w-20 h-20 rounded-full border-2 border-dashed border-gray-300 flex items-center justify-center text-gray-300 mb-6">
-                        <i data-lucide="plus" class="w-8 h-8"></i>
+                <div class="glass-card member-card p-8 md:p-10 rounded-[2rem] md:rounded-[2.5rem] border-dashed border-gray-300 bg-gray-50/30 flex flex-col justify-center items-center min-h-[300px]">
+                    <div class="w-16 h-16 md:w-20 md:h-20 rounded-full border-2 border-dashed border-gray-300 flex items-center justify-center text-gray-300 mb-6">
+                        <i data-lucide="plus" class="w-6 h-6 md:w-8 md:h-8"></i>
                     </div>
-                    <h4 class="text-xl font-bold text-gray-400 italic">Who's next..</h4>
-                    <p class="text-gray-400 text-xs mt-4 uppercase tracking-widest">Wait for Bit #3/8</p>
+                    <h4 class="text-lg md:text-xl font-bold text-gray-400 italic">Who's next..</h4>
+                    <p class="text-gray-400 text-[10px] md:text-xs mt-4 uppercase tracking-widest">Wait for Bit #3/8</p>
                 </div>
             </div>
         </div>
     </main>
 
     <!-- Footer -->
-    <footer class="py-16 px-6 text-center border-t border-black/5 bg-[#fafafa]">
+    <footer class="py-12 md:py-16 px-6 text-center border-t border-black/5 bg-[#fafafa]">
         <div class="max-w-7xl mx-auto flex flex-col items-center gap-6">
             <div class="flex items-center gap-2 mb-2 group">
                 <i data-lucide="mail" class="w-4 h-4 text-gray-400 group-hover:text-black transition-colors"></i>
-                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=wearebyte08@gmail.com" target="_blank" rel="noopener noreferrer" class="text-sm font-medium text-gray-500 hover:text-black transition-colors">
-                    wearebyte08@gmail.com
-                </a>
+                <a href="mailto:wearebyte08@gmail.com" class="text-xs md:text-sm font-medium text-gray-500 hover:text-black transition-colors">wearebyte08@gmail.com</a>
             </div>
-            <div class="text-[10px] text-gray-400 uppercase tracking-widest leading-loose">
+            <div class="text-[9px] md:text-[10px] text-gray-400 uppercase tracking-widest leading-loose">
                 &copy; 2024 BYTE Coding Crew. [VIII] | Powered by Convergence<br>
                 Built with Passion in South Korea
             </div>
@@ -391,18 +474,78 @@
     <script>
         lucide.createIcons();
 
+        // --- Data ---
+        const projectData = {
+            'byte-web': {
+                title: 'BYTE Official Website',
+                desc: 'BYTE 크루의 아이덴티티를 전 세계에 알리기 위한 허브입니다. 단순한 포트폴리오 사이트를 넘어, 팀이 지향하는 융합과 코딩의 미학을 담았습니다. 사용자의 마우스 움직임이나 터치에 반응하는 3D 요소들은 "살아있는 데이터"를 상징합니다.',
+                img: 'YOUR_IMAGE_PATH.jpg',
+                imgFallback: 'https://api.dicebear.com/7.x/shapes/svg?seed=BYTE&backgroundColor=050505',
+                tags: ['#WebDesign'],
+                notionUrl: 'https://www.notion.so/BYTE-309a497aef8680f285b2cc1939d6d655?t=new' // 사용자가 제공한 링크 적용
+            }
+        };
+
+        // --- Modal Logic ---
+        function openModal(projectId) {
+            const data = projectData[projectId];
+            if (!data) return;
+
+            const modal = document.getElementById('project-modal');
+            document.getElementById('modal-title').textContent = data.title;
+            document.getElementById('modal-desc').textContent = data.desc;
+            
+            const imgEl = document.getElementById('modal-img');
+            imgEl.src = data.img;
+            imgEl.onerror = () => { imgEl.src = data.imgFallback; };
+
+            const tagContainer = document.getElementById('modal-tags');
+            tagContainer.innerHTML = '';
+            data.tags.forEach(tag => {
+                const span = document.createElement('span');
+                span.className = 'hashtag tag-frontend';
+                span.textContent = tag;
+                tagContainer.appendChild(span);
+            });
+
+            // Set Notion Redirect URL
+            const notionBtn = document.getElementById('modal-notion-btn');
+            notionBtn.onclick = () => {
+                if(data.notionUrl) window.open(data.notionUrl, '_blank');
+            };
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden'; 
+            
+            setTimeout(() => {
+                modal.classList.add('active');
+            }, 10);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('project-modal');
+            modal.classList.remove('active');
+            
+            setTimeout(() => {
+                modal.classList.remove('flex');
+                modal.classList.add('hidden');
+                document.body.style.overflow = ''; 
+            }, 300);
+        }
+
         // --- 3D Logo Initialization ---
         const mainLogoContainer = document.getElementById('mainLogoContainer');
         const navLogoScene = document.getElementById('navLogoScene');
         const navLogoFace = document.getElementById('navLogoFace');
         const navLogoSides = document.getElementById('navLogoSides');
         const navLogoGroup = document.getElementById('navLogoGroup');
-        const thicknessCount = 10; 
+        let thicknessCount = window.innerWidth < 768 ? 6 : 10; 
 
         function init3DLogo() {
             const transformBase = "translate(-50%, -50%)";
             navLogoFace.style.transform = `${transformBase} translateZ(${thicknessCount}px)`;
-
+            navLogoSides.innerHTML = '';
             for (let i = 0; i < thicknessCount; i++) {
                 const layer = document.createElement('div');
                 layer.className = 'logo-layer layer-side';
@@ -416,83 +559,77 @@
 
         init3DLogo();
 
-        // --- Interactive Spacing & 3D Rotation ---
-        document.addEventListener('mousemove', (e) => {
+        // --- Interactions ---
+        function handleInteraction(x, y) {
             const rect = navLogoScene.getBoundingClientRect();
             const logoCenterX = rect.left + rect.width / 2;
             const logoCenterY = rect.top + rect.height / 2;
-            
-            const deltaX = (e.clientX - logoCenterX) / (window.innerWidth / 2);
-            const deltaY = (e.clientY - logoCenterY) / (window.innerHeight / 2);
-            
-            const rotateY = deltaX * 45; 
-            const rotateX = -deltaY * 45; 
+            const deltaX = (x - logoCenterX) / (window.innerWidth / 2);
+            const deltaY = (y - logoCenterY) / (window.innerHeight / 2);
+            const rotateY = deltaX * 35; 
+            const rotateX = -deltaY * 35; 
+            navLogoGroup.style.transition = 'transform 0.1s ease-out';
             navLogoGroup.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            if (!mainLogoContainer.classList.contains('is-active')) mainLogoContainer.classList.add('is-active');
+        }
 
-            if (!mainLogoContainer.classList.contains('is-active')) {
-                mainLogoContainer.classList.add('is-active');
-            }
-        });
-
-        document.addEventListener('mouseleave', () => {
+        const resetLogo = () => {
             navLogoGroup.style.transition = 'transform 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
             navLogoGroup.style.transform = `rotateX(0deg) rotateY(0deg)`;
-            
             mainLogoContainer.classList.remove('is-active');
+        };
 
-            setTimeout(() => {
-                navLogoGroup.style.transition = 'transform 0.1s ease-out';
-            }, 1200);
-        });
+        document.addEventListener('mousemove', (e) => handleInteraction(e.clientX, e.clientY));
+        document.addEventListener('touchmove', (e) => {
+            if (e.touches.length > 0) handleInteraction(e.touches[0].clientX, e.touches[0].clientY);
+        }, { passive: true });
+        document.addEventListener('mouseleave', resetLogo);
+        document.addEventListener('touchend', resetLogo);
 
-        // --- Page Navigation ---
+        // --- Navigation Logic ---
         function showPage(pageId) {
-            document.querySelectorAll('.page-view').forEach(view => {
-                view.classList.remove('active');
-            });
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.classList.remove('nav-active');
-            });
+            document.querySelectorAll('.page-view').forEach(view => view.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('nav-active'));
             const activePage = document.getElementById(`${pageId}-view`);
             if (activePage) activePage.classList.add('active');
             const navBtn = document.getElementById(`nav-${pageId}`);
             if (navBtn) navBtn.classList.add('nav-active');
-            window.scrollTo(0, 0);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             if(pageId === 'home') resize();
         }
 
-        const nav = document.getElementById('main-nav');
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) nav.classList.add('scrolled');
+            const nav = document.getElementById('main-nav');
+            if (window.scrollY > 30) nav.classList.add('scrolled');
             else nav.classList.remove('scrolled');
         });
 
-        // --- Canvas Animation ---
+        // --- Canvas Bits Background ---
         const canvas = document.getElementById('bits-bg');
         const heroArea = document.getElementById('hero-area');
         const ctx = canvas.getContext('2d');
         let width, height;
-        const particles = [];
+        let particles = [];
 
         function resize() {
             if (!heroArea) return;
             width = canvas.width = heroArea.offsetWidth;
             height = canvas.height = heroArea.offsetHeight;
+            thicknessCount = window.innerWidth < 768 ? 6 : 10;
+            init3DLogo();
+            initParticles();
         }
-
-        window.addEventListener('resize', resize);
-        resize();
 
         class Particle {
             constructor() { this.reset(); }
             reset() {
-                this.x = Math.random() * (width || window.innerWidth);
-                this.y = (height || window.innerHeight) + Math.random() * 50; 
-                this.size = Math.random() * 1.2 + 0.8;
-                this.speed = Math.random() * 1.0 + 0.2; 
+                this.x = Math.random() * width;
+                this.y = height + Math.random() * 50; 
+                this.size = Math.random() * (window.innerWidth < 768 ? 0.7 : 1.1) + 0.5;
+                this.speed = Math.random() * 0.8 + 0.2; 
                 this.text = Math.random() > 0.5 ? '1' : '0';
                 const gray = Math.floor(Math.random() * 100 + 120); 
-                this.color = `rgba(${gray}, ${gray}, ${gray}, ${Math.random() * 0.3 + 0.1})`;
+                this.color = `rgba(${gray}, ${gray}, ${gray}, ${Math.random() * 0.2 + 0.1})`;
             }
             update() {
                 this.y -= this.speed;
@@ -500,12 +637,16 @@
             }
             draw() {
                 ctx.fillStyle = this.color;
-                ctx.font = `${this.size * 12}px monospace`;
+                ctx.font = `${this.size * 10}px monospace`;
                 ctx.fillText(this.text, this.x, this.y);
             }
         }
 
-        for (let i = 0; i < 70; i++) particles.push(new Particle());
+        function initParticles() {
+            particles = [];
+            const count = window.innerWidth < 768 ? 30 : 60;
+            for (let i = 0; i < count; i++) particles.push(new Particle());
+        }
 
         function animate() {
             if (document.getElementById('home-view').classList.contains('active')) {
@@ -514,6 +655,9 @@
             }
             requestAnimationFrame(animate);
         }
+
+        window.addEventListener('resize', resize);
+        resize();
         animate();
     </script>
 </body>
